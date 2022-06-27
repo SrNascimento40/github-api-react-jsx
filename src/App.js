@@ -16,16 +16,39 @@ export default function App() {
     }
     AddingRepos() 
   }, [])
-//{executar}, [variaveis condicionantes, se esse array estiver vazio só executa uma vez]
+//{execute}, [conditional variables, if this array is empty, it only executes once]
 //await: The keyword "await" makes JavaScript wait until that promise settles and returns its result
-//async: sempre que usar await, antes deve ter async na função
+//async: always i use await, should have async in the function
 
+  useEffect(() => {
+    const filtered = repositories.filter(repo => repo.favorite)
+
+    document.title = `You have ${filtered.length} repositories`
+  }, [repositories])
+//[with this conditionant, the useEffect will run when repositories change]
+//filter gonna get only repos with favorite
+
+
+  function handleFavorite(id) {
+    const newRepositories = repositories.map(repo => {
+      return repo.id === id ? {...repo, favorite: !repo.favorite} : repo
+    })
+
+    setRepositories(newRepositories)
+  }
 
   return (
     <>
       <ul>
         {repositories.map(repo => (
-          <li key={repo.id}>{repo.name}</li>
+          <li key={repo.id}>
+            {repo.name}
+            {repo.favorite && <span> (Favorito)</span>}
+            <button onClick={() => handleFavorite(repo.id)}>
+              Favoritar
+            </button>
+          </li>
+          // arrow function on onClick is for ensuring the function will run first
         ))}
       </ul>
     </>
